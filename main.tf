@@ -49,7 +49,7 @@ module "alb" {
   name    = "blog-alb"
   vpc_id  = module.blog_vpc.vpc_id
   subnets = module.blog_vpc.public_subnets
-  security_groups = module.blog_sg.security_group_id
+  security_groups = [module.blog_sg.security_group_id]
 
   # Security Group
   security_group_ingress_rules = {
@@ -86,14 +86,7 @@ module "alb" {
         status_code = "HTTP_301"
       }
     }
-    ex-https = {
-      port            = 443
-      protocol        = "HTTPS"
-      certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
-      forward = {
-        target_group_key = "ex-instance"
-      }
     }
   }
 
