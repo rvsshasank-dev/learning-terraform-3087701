@@ -30,3 +30,21 @@ resource "aws_route_table_association"  "public_rta"{
     route_table_id = aws_route.public-route-table.id
 }
 
+resource "aws_security_group" "ec2_sg"{
+    name = "ec2_sg"
+    description = "security group for EC2 machines"
+    vpc_id  = aws_vpc.my_vpc.id
+    ingress{
+        description = "SSH connectivity"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port =0
+        to_port = 0
+        protocol ="-1"
+        cidr_blocks = ["0.0.0.0/0"]
+}
+
