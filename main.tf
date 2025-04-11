@@ -65,6 +65,7 @@ data "aws_ami" "app_ami" {
 }
 
 
+
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -80,7 +81,21 @@ module "blog_vpc" {
   }
 }
 
-module "autoscaling" {
+resource "aws_instance" "blog"{
+    ami = data.aws_ami.app_ami.id
+    instance_type = var.instance_type 
+
+    subnet_id = module.blog_vpc.public_subnets[0]
+
+    vpc_security_group_ids = [module.blog_sg.security_group_id]
+
+    tags = {
+        Name = "HelloWorld"
+    }
+}
+
+
+/*module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "8.2.0"
   # insert the 1 required variable here
@@ -94,7 +109,7 @@ module "autoscaling" {
 
   image_id = data.aws_ami.app_ami.id
   instance_type = var.instance_type 
-}
+}*/
 
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
